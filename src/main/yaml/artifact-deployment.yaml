@@ -258,16 +258,16 @@ data:
     \ -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom\n         \
     \   -DunisonEnvironmentFile=/etc/openunison/ou.env\n        - name: fortriggerupdates\n\
     \          value: changeme\n        - name: MYVD_CONFIG_PATH\n          value:\
-    \ WEB-INF/myvd.conf\n        - name: OPENUNISON_WAR_URL\n          value: https://www.tremolosecurity.com/nexus/service/local/repositories/betas/content/io/openunison/openunison-k8s-activedirectory/1.0.15/openunison-k8s-activedirectory-1.0.15.war\n\
-    \        image: docker.io/tremolosecurity/openunison-docker-ubuntu\n        imagePullPolicy:\
-    \ Always\n        livenessProbe:\n          exec:\n            command:\n    \
-    \        - /usr/local/openunison/bin/check_alive.py\n          failureThreshold:\
-    \ 10\n          initialDelaySeconds: 120\n          periodSeconds: 10\n      \
-    \    successThreshold: 1\n          timeoutSeconds: 10\n        name: openunison\n\
-    \        ports:\n        - containerPort: 8080\n          name: http\n       \
-    \   protocol: TCP\n        - containerPort: 8443\n          name: https\n    \
-    \      protocol: TCP\n        readinessProbe:\n          exec:\n            command:\n\
-    \            - /usr/local/openunison/bin/check_alive.py\n            - https://127.0.0.1:8443/auth/idp/k8sIdp/.well-known/openid-configuration\n\
+    \ WEB-INF/myvd.conf\n        image: docker.io/tremolosecurity/openunison-k8s-activedirectory\n\
+    \        imagePullPolicy: Always\n        livenessProbe:\n          exec:\n  \
+    \          command:\n            - /usr/local/openunison/bin/check_alive.py\n\
+    \          failureThreshold: 10\n          initialDelaySeconds: 120\n        \
+    \  periodSeconds: 10\n          successThreshold: 1\n          timeoutSeconds:\
+    \ 10\n        name: openunison\n        ports:\n        - containerPort: 8080\n\
+    \          name: http\n          protocol: TCP\n        - containerPort: 8443\n\
+    \          name: https\n          protocol: TCP\n        readinessProbe:\n   \
+    \       exec:\n            command:\n            - /usr/local/openunison/bin/check_alive.py\n\
+    \            - https://127.0.0.1:8443/auth/idp/k8sIdp/.well-known/openid-configuration\n\
     \            - issuer\n          failureThreshold: 3\n          initialDelaySeconds:\
     \ 30\n          periodSeconds: 10\n          successThreshold: 1\n          timeoutSeconds:\
     \ 10\n        resources: {}\n        terminationMessagePath: /dev/termination-log\n\
