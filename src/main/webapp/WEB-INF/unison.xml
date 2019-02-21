@@ -278,6 +278,15 @@ auditLogType.name  AS `Action`,CASE WHEN isEntry = 1 THEN 'Object' ELSE 'Attribu
                 <dataFields>Name</dataFields>
                 <dataFields>Value</dataFields>
             </report>
+            <report orgID="d2f56bce-b0d4-44fa-8c5d-bd600b0bc589" name="Dormant Users" description="Users the have not logged into Kubernetes for 30 days" groupings="false">
+                <sql>select (SELECT value FROM userAttributes WHERE name=&apos;uid&apos; AND userid=user_id) AS `User ID`,(SELECT value FROM userAttributes WHERE name=&apos;givenname&apos; AND userid=user_id) AS `First Name`, (SELECT value FROM userAttributes WHERE name=&apos;sn&apos; AND userid=user_id) AS `Last Name`, (SELECT value FROM userAttributes WHERE name=&apos;mail&apos; AND userid=user_id) AS `Email Address`,last_login AS `Last Login Date`, DATEDIFF(CURDATE(),last_login) AS `Days Since Last Login`  from  (select userid as user_id,max(completeTS) as last_login from workflows where name=&apos;jitdb&apos; group by userid) X where last_login &lt; DATE_SUB(CURDATE(),INTERVAL 10 DAY)</sql>
+                <dataFields>User ID</dataFields>
+                <dataFields>First Name</dataFields>
+                <dataFields>Last Name</dataFields>
+                <dataFields>Email Address</dataFields>
+                <dataFields>Last Login Date</dataFields>
+                <dataFields>Days Since Last Login</dataFields>
+            </report>
         </reports>
 
 

@@ -147,7 +147,7 @@
                     <filter class="com.tremolosecurity.scalejs.register.ws.ScaleRegister">
                         <param name="displayNameAttribute" value="mail"/>
                         <param name="uidAttributeName" value="uid"/>
-                        <param name="workflowName" value="NewK8SNamespace"/>
+                        <param name="workflowName" value=""/>
                         <param name="logoutURL" value="/logout"/>
                         <param name="homeURL" value="/"/>
                         <param name="frontPage.text" value="Use this page to request the creation of a new namespace.  Once the namespace is approved you will be the first approver and administrator.  You will be notified when the namespace is ready."/>
@@ -159,8 +159,8 @@
                         <param name="rcSecret" value=""/>
                         <param name="requireTermsAndConditions" value="false"/>
                         <param name="termsAndConditionsText" value=""/>
-                        <param name="useCallWorkflowClass" value="false"/>
-                        <param name="callWorkflowClassName" value=""/>
+                        <param name="useCallWorkflowClass" value="true"/>
+                        <param name="callWorkflowClassName" value="com.tremolosecurity.scalejs.K8sProjectCheck"/>
                         <param name="submitLoggedInUser" value="true"/>
                         <param name="attributeNames" value="nameSpace"/>
                         <param name="nameSpace.displayName" value="Namespace Name"/>
@@ -172,6 +172,10 @@
                         <param name="nameSpace.maxChars" value="63"/>
                         <param name="nameSpace.unique" value="false"/>
                         <param name="nameSpace.type" value="text"/>
+
+                        <param name="callWorkflowInit" value="workflowName=NewK8SNamespace" />
+                        <param name="callWorkflowInit" value="targetName=k8s" />
+                        <param name="callWorkflowInit" value="projectAttributeName=nameSpace" />
                     </filter>
                 </filterChain>
                 <uri>/newproject/register</uri>
