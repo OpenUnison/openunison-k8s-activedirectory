@@ -274,9 +274,9 @@ data:
     \ -Djava.awt.headless=true -Djava.security.egd=file:/dev/./urandom\n         \
     \   -DunisonEnvironmentFile=/etc/openunison/ou.env\n        - name: fortriggerupdates\n\
     \          value: changeme\n        - name: MYVD_CONFIG_PATH\n          value:\
-    \ WEB-INF/myvd.conf\n        #image: docker.io/tremolosecurity/openunison-k8s-activedirectory\n\
-    \        image: docker.io/mlbiam/adou\n        imagePullPolicy: Always\n     \
-    \   livenessProbe:\n          exec:\n            command:\n            - /usr/local/openunison/bin/check_alive.py\n\
+    \ WEB-INF/myvd.conf\n        image: docker.io/tremolosecurity/openunison-k8s-activedirectory\n\
+    \        imagePullPolicy: Always\n        livenessProbe:\n          exec:\n  \
+    \          command:\n            - /usr/local/openunison/bin/check_alive.py\n\
     \          failureThreshold: 10\n          initialDelaySeconds: 120\n        \
     \  periodSeconds: 10\n          successThreshold: 1\n          timeoutSeconds:\
     \ 10\n        name: openunison\n        ports:\n        - containerPort: 8080\n\
