@@ -83,8 +83,9 @@ spec:
         image: docker.io/tremolosecurity/activemq-docker
         imagePullPolicy: Always
         livenessProbe:
-          tcpSocket:
-            port: 61616
+          exec:
+            command:
+            - /usr/bin/health_check.sh
           failureThreshold: 10
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -99,8 +100,9 @@ spec:
           name: https
           protocol: TCP
         readinessProbe:
-          tcpSocket:
-            port: 61616
+          exec:
+            command:
+            - /usr/bin/health_check.sh
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -228,7 +230,8 @@ spec:
           value: changeme
         - name: MYVD_CONFIG_PATH
           value: WEB-INF/myvd.conf
-        image: docker.io/tremolosecurity/openunison-k8s-activedirectory
+        #image: docker.io/tremolosecurity/openunison-k8s-activedirectory
+        image: docker.io/mlbiam/adou
         imagePullPolicy: Always
         livenessProbe:
           exec:
@@ -275,138 +278,3 @@ spec:
         secret:
           defaultMode: 420
           secretName: openunison-secrets
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard
-  namespace: kube-system
-
----
-# ------------------- Dashboard Role & Role Binding ------------------- #
-
-kind: Role
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: kubernetes-dashboard-minimal
-  namespace: kube-system
-rules:
-  # Allow Dashboard to create 'kubernetes-dashboard-key-holder' secret.
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["create"]
-  # Allow Dashboard to create 'kubernetes-dashboard-settings' config map.
-- apiGroups: [""]
-  resources: ["configmaps"]
-  verbs: ["create"]
-  # Allow Dashboard to get, update and delete Dashboard exclusive secrets.
-- apiGroups: [""]
-  resources: ["secrets"]
-  resourceNames: ["kubernetes-dashboard-key-holder", "kubernetes-dashboard-certs"]
-  verbs: ["get", "update", "delete"]
-  # Allow Dashboard to get and update 'kubernetes-dashboard-settings' config map.
-- apiGroups: [""]
-  resources: ["configmaps"]
-  resourceNames: ["kubernetes-dashboard-settings"]
-  verbs: ["get", "update"]
-  # Allow Dashboard to get metrics from heapster.
-- apiGroups: [""]
-  resources: ["services"]
-  resourceNames: ["heapster"]
-  verbs: ["proxy"]
-- apiGroups: [""]
-  resources: ["services/proxy"]
-  resourceNames: ["heapster", "http:heapster:", "https:heapster:"]
-  verbs: ["get"]
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: kubernetes-dashboard-minimal
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: kubernetes-dashboard-minimal
-subjects:
-- kind: ServiceAccount
-  name: kubernetes-dashboard
-  namespace: kube-system
-
----
-# ------------------- Dashboard Deployment ------------------- #
-
-kind: Deployment
-apiVersion: apps/v1beta2
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard
-  namespace: kube-system
-spec:
-  replicas: 1
-  revisionHistoryLimit: 10
-  selector:
-    matchLabels:
-      k8s-app: kubernetes-dashboard
-  template:
-    metadata:
-      labels:
-        k8s-app: kubernetes-dashboard
-    spec:
-      containers:
-      - name: kubernetes-dashboard
-        image: k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0
-        ports:
-        - containerPort: 8443
-          protocol: TCP
-        args:
-          - --auto-generate-certificates
-          # Uncomment the following line to manually specify Kubernetes API server Host
-          # If not specified, Dashboard will attempt to auto discover the API server and connect
-          # to it. Uncomment only if the default does not work.
-          # - --apiserver-host=http://my-address:port
-        volumeMounts:
-        - name: kubernetes-dashboard-certs
-          mountPath: /certs
-          # Create on-disk volume to store exec logs
-        - mountPath: /tmp
-          name: tmp-volume
-        livenessProbe:
-          httpGet:
-            scheme: HTTPS
-            path: /
-            port: 8443
-          initialDelaySeconds: 30
-          timeoutSeconds: 30
-      volumes:
-      - name: kubernetes-dashboard-certs
-        secret:
-          secretName: kubernetes-dashboard-certs
-      - name: tmp-volume
-        emptyDir: {}
-      serviceAccountName: kubernetes-dashboard
-      # Comment the following tolerations if Dashboard must not be deployed on master
-      tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-
----
-# ------------------- Dashboard Service ------------------- #
-
-kind: Service
-apiVersion: v1
-metadata:
-  labels:
-    k8s-app: kubernetes-dashboard
-  name: kubernetes-dashboard
-  namespace: kube-system
-spec:
-  ports:
-    - port: 443
-      targetPort: 8443
-  selector:
-    k8s-app: kubernetes-dashboard
