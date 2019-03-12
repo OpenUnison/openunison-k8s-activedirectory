@@ -9,9 +9,9 @@ data:
     //    distributed under the License is distributed on an \"AS IS\" BASIS,\n//\
     \    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n\
     //    See the License for the specific language governing permissions and\n//\
-    \    limitations under the License.\n\nprint(\"Loading CertUtils\");\nvar CertUtils\
-    \ = Java.type(\"com.tremolosecurity.kubernetes.artifacts.util.CertUtils\");\n\n\
-    print(\"Creating openunison keystore\");\n\nksPassword = inProp['unisonKeystorePassword'];\n\
+    \    limitations under the License.\n\n\ninProp['K8S_DB_SECRET'] = java.util.UUID.randomUUID().toString();\n\
+    \nprint(\"Loading CertUtils\");\nvar CertUtils = Java.type(\"com.tremolosecurity.kubernetes.artifacts.util.CertUtils\"\
+    );\n\nprint(\"Creating openunison keystore\");\n\nksPassword = inProp['unisonKeystorePassword'];\n\
     ouKs = Java.type(\"java.security.KeyStore\").getInstance(\"PKCS12\");\nouKs.load(null,ksPassword.toCharArray());\n\
     \nuse_k8s_cm = inProp['USE_K8S_CM'] == \"true\";\n\nprint(\"Generating client\
     \ certificate for activemq\");\namqCertInfo = {\n    \"serverName\":\"amq-client\"\
