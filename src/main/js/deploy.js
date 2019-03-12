@@ -12,6 +12,9 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 
+
+inProp['K8S_DB_SECRET'] = java.util.UUID.randomUUID().toString();
+
 print("Loading CertUtils");
 var CertUtils = Java.type("com.tremolosecurity.kubernetes.artifacts.util.CertUtils");
 
