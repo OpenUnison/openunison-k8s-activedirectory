@@ -261,7 +261,8 @@
                   <param name="kubectlUsage" value="Run the kubectl command to set your user-context and server connection" />
                   <param name="k8sCaCertName" value="k8s-master"/>
                   <param name="unisonCaCertName" value="unison-ca"/>
-                  <param name="kubectlTemplate" value="export TMP_CERT=\$(mktemp) &amp;&amp; echo -e &quot;$k8s_newline_cert$&quot; > \$TMP_CERT &amp;&amp; kubectl config set-cluster kubernetes --server=#[K8S_URL] --certificate-authority=\$TMP_CERT --embed-certs=true &amp;&amp; kubectl config set-context kubernetes --cluster=kubernetes --user=$user_id$  &amp;&amp; kubectl config set-credentials $user_id$  --auth-provider=oidc --auth-provider-arg=idp-issuer-url=$token.claims.issuer$ --auth-provider-arg=client-id=$token.trustName$ --auth-provider-arg=refresh-token=$token.refreshToken$  --auth-provider-arg=id-token=$token.encodedIdJSON$  --auth-provider-arg=idp-certificate-authority-data=$ou_b64_cert$   &amp;&amp; kubectl config use-context kubernetes &amp;&amp; rm \$TMP_CERT" />
+                  <param name="kubectlTemplate" value="export TMP_CERT=\$(mktemp) &amp;&amp; echo -e &quot;$k8s_newline_cert$&quot; > \$TMP_CERT &amp;&amp; kubectl config set-cluster #[K8S_CLUSTER_NAME:kubernetes] --server=#[K8S_URL] --certificate-authority=\$TMP_CERT --embed-certs=true &amp;&amp; kubectl config set-context #[K8S_CLUSTER_NAME:kubernetes] --cluster=#[K8S_CLUSTER_NAME:kubernetes] --user=$user_id$  &amp;&amp; kubectl config set-credentials $user_id$  --auth-provider=oidc --auth-provider-arg=idp-issuer-url=$token.claims.issuer$ --auth-provider-arg=client-id=$token.trustName$ --auth-provider-arg=refresh-token=$token.refreshToken$  --auth-provider-arg=id-token=$token.encodedIdJSON$  --auth-provider-arg=idp-certificate-authority-data=$ou_b64_cert$   &amp;&amp; kubectl config use-context #[K8S_CLUSTER_NAME:kubernetes] &amp;&amp; rm \$TMP_CERT" />
+                  <param name="kubectlWinUsage" value="kubectl config set-cluster #[K8S_CLUSTER_NAME:kubernetes] --server=#[K8S_URL]  ; kubectl config set-context #[K8S_CLUSTER_NAME:kubernetes] --cluster=#[K8S_CLUSTER_NAME:kubernetes] --user=$user_id$  ; kubectl config set-credentials $user_id$  --auth-provider=oidc --auth-provider-arg=idp-issuer-url=$token.claims.issuer$ --auth-provider-arg=client-id=$token.trustName$ --auth-provider-arg=refresh-token=$token.refreshToken$  --auth-provider-arg=id-token=$token.encodedIdJSON$  --auth-provider-arg=idp-certificate-authority-data=$ou_b64_cert$ ; kubectl config use-context #[K8S_CLUSTER_NAME:kubernetes]" />
                 </filter>
                 </filterChain>
                 <uri>/k8stoken/token</uri>
@@ -276,6 +277,67 @@
                     <rule scope="filter" constraint="(groups=k8s-*)"/>
                 </azRules>
             </url>
+
+            <url regex="false" authChain="LoginService" overrideHost="false" overrideReferer="false">
+                <host>#[OU_HOST]</host>
+                <filterChain>
+                  <filter class="com.tremolosecurity.scalejs.ws.ScaleJSOperator">
+
+                       <!-- List of directory bases to search in the form of label=distinguished name -->
+                      <param name="bases" value="OpenUnison=o=Tremolo"/>
+
+
+                       <!-- List of attributes and labels that can be searched on -->
+                      <param name="searchableAttributes" value="givenname=First Name" />
+                      <param name="searchableAttributes" value="sn=Last Name" />
+                      <param name="searchableAttributes" value="mail=Email Address" />
+                      <param name="searchableAttributes" value="uid=Login ID" />
+
+                       <!-- List of attributes to include in the results -->
+                      <param name="resultAttributes" value="givenname=First Name" />
+                      <param name="resultAttributes" value="sn=Last Name" />
+                      <param name="resultAttributes" value="mail=Email Address" />
+                      <param name="resultAttributes" value="uid=Login ID" />
+
+                       <!-- The name of the OpenUnison application that hosts ScaleJS -->
+                      <param name="scaleMainAppName" value="scale" />
+                      <!-- The relative URI to ScaleJS' web services -->
+                      <param name="scaleMainURI" value="/scale/main" />
+                      <!-- Link to use for the home link -->
+                      <param name="homeUrl" value="/scale/index.html" />
+
+                     </filter>
+                  </filterChain>
+                  <uri>/ops/ops</uri>
+
+                   <results>
+                      <auSuccess></auSuccess>
+                      <auFail>Default Login Failure</auFail>
+                      <azSuccess></azSuccess>
+                      <azFail>PrivilegedRequest</azFail>
+                  </results>
+                  <azRules>
+                      <rule scope="filter" constraint="(groups=administrators)"/>
+                  </azRules>
+              </url>
+
+               <url regex="false" authChain="LoginService" overrideHost="false" overrideReferer="false">
+                  <host>#[OU_HOST]</host>
+                  <filterChain>
+
+                   </filterChain>
+                  <uri>/ops</uri>
+
+                   <results>
+                      <auSuccess></auSuccess>
+                      <auFail>Default Login Failure</auFail>
+                      <azSuccess></azSuccess>
+                      <azFail>PrivilegedRequest</azFail>
+                  </results>
+                  <azRules>
+                      <rule scope="filter" constraint="(groups=administrators)"/>
+                  </azRules>
+              </url>
 
 
   </urls>

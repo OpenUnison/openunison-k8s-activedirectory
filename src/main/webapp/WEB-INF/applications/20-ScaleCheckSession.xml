@@ -48,6 +48,23 @@
         <rule scope="dn" constraint="o=Tremolo" />
       </azRules>
     </url>
+
+    <url regex="false" authChain="anon" overrideHost="true" overrideReferer="true">
+        <host>#[OU_HOST]</host>
+        <filterChain>
+          <filter class="com.tremolosecurity.proxy.filters.CheckSession">
+            <param name="applicationName" value="scale"/>
+          </filter>
+        </filterChain>
+        <uri>/ops/sessioncheck</uri>
+        <results>
+          <azSuccess>
+          </azSuccess>
+        </results>
+        <azRules>
+          <rule scope="dn" constraint="o=Tremolo" />
+        </azRules>
+      </url>
   </urls>
   <cookieConfig>
     <sessionCookieName>checksession</sessionCookieName>
