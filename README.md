@@ -153,8 +153,6 @@ Copy `values.yaml` and update as appropriate:
 
 Additionally, add a base 64 encoded PEM certificate to your values under `trusted_certs` for `pem_b64`.  This will allow OpenUnison to talk to Active Directory using TLS.
 
-This installer will create the `openunison` namespace, create certificates for you (including for the dashboard) and the approprioate `CronJob` needed to make sure that certificates are kept updated.
-
 Finally, run the helm chart:
 
 `helm install orchestra tremolo/openunison-k8s-activedirectory --namespace openunison -f /path/to/values.yaml`
