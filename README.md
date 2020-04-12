@@ -109,7 +109,7 @@ kind: Secret
 
 ## Deploy OpenUnison
 
-Copy `values.yaml` and update as appropriate:
+Copy `values.yaml` (https://raw.githubusercontent.com/OpenUnison/helm-charts/master/openunison-k8s-activedirectory/values.yaml) and update as appropriate:
 
 | Property | Description |
 | -------- | ----------- |
@@ -159,7 +159,7 @@ Finally, run the helm chart:
 
 ## Complete SSO Integration with Kubernetes
 
-Run `kubectl describe configmap api-server-config -n openunison` to get the SSO integration artifacts.  The output will give you both the API server flags that need to be configured on your API servers.  The certificate that needs to be trusted is in the `ou-tls-certificate` secret in the `openunison` namespace.
+If using impersonation, you can skip this section.  Run `kubectl describe configmap api-server-config -n openunison` to get the SSO integration artifacts.  The output will give you both the API server flags that need to be configured on your API servers.  The certificate that needs to be trusted is in the `ou-tls-certificate` secret in the `openunison` namespace.
 
 ## First Login to Orchestra
 
