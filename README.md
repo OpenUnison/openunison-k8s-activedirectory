@@ -322,3 +322,5 @@ kubectl create configmap myvd --from-file . -n openunison
 
 Next edit the `openunison` deployment to mount the `ConfigMap` to `/etc/myvd` and change the environment variable `MYVD_CONFIG_PATH` to `/etc/myvd/myvd.conf`.  Once the OpenUnison pods have been recreated, you can login with your LDAP uid (as opposed to an Active Directory samAccountName).
 
+# Additional Resources
+Deployment in AWS - https://www.tremolosecurity.com/post/multi-tenant-amazon-eks-the-easy-way-part-ii-provisioning-namespaces
