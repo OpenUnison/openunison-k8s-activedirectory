@@ -67,7 +67,13 @@
       </dynamicOrgs>
             
             <azRules/>
-            <orgs name="#[K8S_DEPLOYMENT_NAME:Local Deployment]" description="#[K8S_DEPLOYMENT_DESC:Current Cluster]" uuid="b1bf4c92-7220-4ad2-91af-ee0fe0af7312">
+            <orgs name="Audit Reports" description="List of reports for auditors and admins" uuid="d2f56bce-b0d4-44fa-8c5d-bd600b0bc589" showInPortal="false" showInRequestsAccess="false" showInReports="true">
+              <azRules>
+                  <rule scope="group" constraint="cn=administrators,ou=groups,ou=shadow,o=Tremolo"/>
+              </azRules>
+          </orgs>
+
+            <orgs name="#[K8S_DEPLOYMENT_NAME:Local Deployment]" description="#[K8S_DEPLOYMENT_DESC:Current Cluster]" uuid="b1bf4c92-7220-4ad2-91af-ee0fe0af7312" showInPortal="true" showInRequestsAccess="false" showInReports="false">
               <azRules/>
             </orgs>
             <orgs name="Kubernetes Namespace Administrators" description="List of projects that can be requested for administration rights" uuid="cecae082-c85d-48df-a837-4726bb755180" showInPortal="false" showInRequestsAccess="true" showInReports="false">
