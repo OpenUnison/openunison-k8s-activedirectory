@@ -49,7 +49,21 @@
 
                 <customTask className="com.tremolosecurity.provisioning.tasks.CreateK8sObject">
                     <param name="targetName" value="k8s"/>
-                    <param name="template" value="{&quot;kind&quot;:&quot;Namespace&quot;,&quot;apiVersion&quot;:&quot;v1&quot;,&quot;metadata&quot;:{&quot;name&quot;:&quot;$nameSpace$&quot;,&quot;labels&quot;:{&quot;name&quot;:&quot;$nameSpace$&quot;}}}"/>
+                    <param name="template" >
+<![CDATA[ 
+{
+    "kind": "Namespace",
+    "apiVersion": "v1",
+    "metadata": {
+      "name": "$nameSpace$",
+      "labels": {
+        "name": "$nameSpace$"
+      }
+    }
+  }
+]]>
+
+                    </param>
                     <param name="kind" value="Namespace" />
                     <param name="url" value="/api/v1/namespaces" />
                 </customTask>
@@ -58,7 +72,30 @@
 
                 <customTask className="com.tremolosecurity.provisioning.tasks.CreateK8sObject">
                     <param name="targetName" value="k8s"/>
-                    <param name="template" value="{&quot;kind&quot;:&quot;RoleBinding&quot;,&quot;apiVersion&quot;:&quot;rbac.authorization.k8s.io/v1&quot;,&quot;metadata&quot;:{&quot;name&quot;:&quot;admins-binding&quot;,&quot;namespace&quot;:&quot;$nameSpace$&quot;},&quot;subjects&quot;:[{&quot;kind&quot;:&quot;Group&quot;,&quot;name&quot;:&quot;k8s-namespace-administrators-$nameSpace$&quot;,&quot;apiGroup&quot;:&quot;rbac.authorization.k8s.io&quot;}],&quot;roleRef&quot;:{&quot;kind&quot;:&quot;ClusterRole&quot;,&quot;name&quot;:&quot;admin&quot;,&quot;apiGroup&quot;:&quot;rbac.authorization.k8s.io&quot;}}"/>
+                    <param name="template" >
+<![CDATA[ 
+{
+    "kind": "RoleBinding",
+    "apiVersion": "rbac.authorization.k8s.io/v1",
+    "metadata": {
+      "name": "admins-binding",
+      "namespace": "$nameSpace$"
+    },
+    "subjects": [
+      {
+        "kind": "Group",
+        "name": "k8s-namespace-administrators-$nameSpace$",
+        "apiGroup": "rbac.authorization.k8s.io"
+      }
+    ],
+    "roleRef": {
+      "kind": "ClusterRole",
+      "name": "admin",
+      "apiGroup": "rbac.authorization.k8s.io"
+    }
+  }
+]]>
+                    </param>
                     <param name="kind" value="RoleBinding" />
                     <param name="url" value="/apis/rbac.authorization.k8s.io/v1/namespaces/$nameSpace$/rolebindings" />
                 </customTask>
@@ -67,17 +104,40 @@
 
                 <customTask className="com.tremolosecurity.provisioning.tasks.CreateK8sObject">
                     <param name="targetName" value="k8s"/>
-                    <param name="template" value="{&quot;kind&quot;:&quot;RoleBinding&quot;,&quot;apiVersion&quot;:&quot;rbac.authorization.k8s.io/v1&quot;,&quot;metadata&quot;:{&quot;name&quot;:&quot;viewers-binding&quot;,&quot;namespace&quot;:&quot;$nameSpace$&quot;},&quot;subjects&quot;:[{&quot;kind&quot;:&quot;Group&quot;,&quot;name&quot;:&quot;k8s-namespace-viewer-$nameSpace$&quot;,&quot;apiGroup&quot;:&quot;rbac.authorization.k8s.io&quot;}],&quot;roleRef&quot;:{&quot;kind&quot;:&quot;ClusterRole&quot;,&quot;name&quot;:&quot;view&quot;,&quot;apiGroup&quot;:&quot;rbac.authorization.k8s.io&quot;}}"/>
+                    <param name="template" >
+<![CDATA[ 
+{
+    "kind": "RoleBinding",
+    "apiVersion": "rbac.authorization.k8s.io/v1",
+    "metadata": {
+      "name": "viewers-binding",
+      "namespace": "$nameSpace$"
+    },
+    "subjects": [
+      {
+        "kind": "Group",
+        "name": "k8s-namespace-viewer-$nameSpace$",
+        "apiGroup": "rbac.authorization.k8s.io"
+      }
+    ],
+    "roleRef": {
+      "kind": "ClusterRole",
+      "name": "view",
+      "apiGroup": "rbac.authorization.k8s.io"
+    }
+  }
+]]>
+                    </param>
                     <param name="kind" value="RoleBinding" />
                     <param name="url" value="/apis/rbac.authorization.k8s.io/v1/namespaces/$nameSpace$/rolebindings" />
                 </customTask>
 
-                <notifyUser subject="Project created" mailAttrib="mail">
-                    <msg>Your project has been created</msg>
+                <notifyUser subject="Namespace created" mailAttrib="mail">
+                    <msg>Your namespace has been created</msg>
                 </notifyUser>
             </onSuccess>
             <onFailure/>
-            <emailTemplate>A new project has been requested</emailTemplate>
+            <emailTemplate>A new namespace has been requested</emailTemplate>
             <approvers>
                 <rule scope="group" constraint="cn=administrators,ou=groups,ou=shadow,o=Tremolo"/>
             </approvers>
