@@ -123,7 +123,7 @@
           <param name="approvalAttributeNames" value="mail"/>
           <param name="approvals.uid" value="Login ID"/>
           <param name="approvals.mail" value="Email Address"/>
-          <param name="showPortalOrgs" value="false"/>
+          <param name="showPortalOrgs" value="#[SHOW_PORTAL_ORGS:false]"/>
           <param name="logoutURL" value="/logout"/>
           <param name="canDelegate" value="yes" />
           <param name="canPreApprove" value="yes" />
