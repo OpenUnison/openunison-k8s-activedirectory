@@ -1,3 +1,10 @@
+>  :warning:
+>
+>  Please go to https://openunison.github.io/ to integrate your cluster with OpenUnison.  This repo has been deprecated. 
+>  It will continue to be updated until 12/30/2022, however new features will **not** be added to this repo.
+>
+>  :warning:
+
 # Orchestra For Kubernetes - Active Directory and LDAP
 
 Orchestra is an automation portal for Kubernetes built on OpenUnison.  Orchestra integrates a user's identity into Kubernetes enabling:
